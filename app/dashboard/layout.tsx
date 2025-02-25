@@ -7,13 +7,28 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="grid grid-cols-12">
-            <div className="col-span-2">
+        <div className="h-screen flex flex-col">
+            {/* Top Navigation */}
+            <header className="border-b p-4 flex items-center justify-between">
+                {/* Left: Logo */}
+                <div className="flex items-center">
+                    <span className="font-bold text-xl">Your Logo</span>
+                    {/* Add your logo component or image here */}
+                </div>
 
-            </div>
-            <div className="col-span-10 bg-slate-400">
+                {/* Right: Avatar (Shadcn) */}
+                <div className="flex items-center">
+                    {/* Replace with your Shadcn Avatar component */}
+                    <div className="rounded-full h-10 w-10 bg-gray-300">
+                        {/*Avatar content goes here*/}
+                    </div>
+                </div>
+            </header>
+
+            {/* Main Content */}
+            <main className="flex-1 p-4">
                 {children}
-            </div>
+            </main>
         </div>
     );
 }

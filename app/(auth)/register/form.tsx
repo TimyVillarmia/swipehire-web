@@ -69,7 +69,7 @@ function SubmitButton() {
     const { pending } = useFormStatus();
 
     return (
-        <Button className="w-full bg-[#6C5CE7] hover:bg-[#5A4BD1] uppercase">Create Account</Button>
+        <Button className="w-full bg-[#6C5CE7] hover:bg-[#5A4BD1] uppercase"  disabled={pending}>Create Account</Button>
     );
 }
 

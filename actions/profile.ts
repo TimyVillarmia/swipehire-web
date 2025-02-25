@@ -1,6 +1,13 @@
-import { recruiterProfileSchema } from "@/definitions";
-import { decrypt } from "@/lib/sessions";
-import { cookies } from "next/headers";
+"use server";
+
+import { InternProfileSchema, recruiterProfileSchema } from "@/definitions";
+import {
+  getAccountById,
+  getRecruiterProfileStatusById,
+  postRecruitProfile,
+  putRecruitProfile,
+} from "@/lib/data";
+import { getUserIdFromCookie } from "@/lib/sessions";
 
 export async function recruiterProfileAction(
   prevState: any,
@@ -21,59 +28,89 @@ export async function recruiterProfileAction(
     companyName,
     workAddress,
     jobPosition,
-    industry,
+    field,
     phoneNumber,
   } = result.data;
 
-  const cookieStore = await cookies();
+  const currentUserId = await getUserIdFromCookie();
 
-  const cookie = cookieStore.get("session")?.value;
-  const session = await decrypt(cookie);
-  const currentUserId = !session?.userId;
+  const hasProfile = await getRecruiterProfileStatusById(currentUserId);
 
-  const response = await fetch("http://localhost:5152/api/Recruit", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      profilePicture,
+  if (!hasProfile) {
+    // POST create profile
+    const response = await postRecruitProfile(
       firstName,
       lastName,
-      companyName,
-      workAddress,
       jobPosition,
-      industry,
+      companyName,
+      field,
+      workAddress,
       phoneNumber,
-      currentUserId,
-    }),
-  });
+      currentUserId
+    );
 
-  if (!response.ok) {
-    return {
-      errors: {
-        email: ["Can't update your profile"],
-      },
-    };
+    if (!response.ok) {
+      return {
+        errors: {
+          email: ["Can't create your profile"],
+        },
+      };
+    }
+  } else {
+    // PUT update profile
+    const response = await putRecruitProfile(
+      firstName,
+      lastName,
+      jobPosition,
+      companyName,
+      field,
+      workAddress,
+      phoneNumber,
+      currentUserId
+    );
+
+    if (!response.ok) {
+      return {
+        errors: {
+          email: ["Can't update your profile"],
+        },
+      };
+    }
   }
 }
 
-// export async function getRecruiterProfile(userId: string) {
-//   const response = await fetch("http://localhost:5152/api/Recruit");
+export async function InterProfileAction(prevState: any, formData: FormData) {
 
-//   if (!result.success) {
-//     return {
-//       errors: result.error.flatten().fieldErrors,
-//     };
-//   }
+  const result = InternProfileSchema.safeParse(Object.fromEntries(formData));
 
-//   const response = await fetch("http://localhost:5152/api/Recruit");
+  if (!result.success) {
+    return {
+      errors: result.error.flatten().fieldErrors,
+    };
+  }
 
-//   if (!response.ok) {
-//     return {
-//       errors: {
-//         email: ["Invalid email or password"],
-//       },
-//     };
-//   }
-// }
+  const {
+    profilePicture,
+    firstName,
+    lastName,
+    phoneNumber,
+    specialization,
+    skills,
+    field,
+    schoolName,
+    degree,
+    education_startDate,
+    education_endDate,
+    companyName,
+    location,
+    position,
+    work_startDate,
+    work_endDate,
+  } = result.data;
+
+  const currentUserId = await getUserIdFromCookie();
+
+  const currentAccount = await getAccountById(currentUserId);
+
+
+}

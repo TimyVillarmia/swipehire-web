@@ -1,13 +1,17 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-
-export function getAccountTypeIdByTypeName(typeName: string,jsonResponse: any ) {
-  const accountType = jsonResponse.$values.find(item => item.typeName === typeName);
+export function getAccountTypeIdByTypeName(
+  typeName: string,
+  jsonResponse: any
+) {
+  const accountType = jsonResponse.$values.find(
+    (item) => item.typeName === typeName
+  );
   if (accountType) {
     return accountType.id;
   } else {
@@ -15,18 +19,45 @@ export function getAccountTypeIdByTypeName(typeName: string,jsonResponse: any ) 
   }
 }
 
+export async function fetchUserRecruitProfileStatus(userId: string) {
+  try {
+    const response = await fetch(`http://localhost:5152/api/Recruit/${userId}`);
 
+    if (response.status === 404) {
+      return false; // profile is not set up
+    }
+    if (response.status === 200) {
+      return true; // profile is set up
+    }
 
-export function getAccountTypeNameByAccountId(accountId: string, jsonResponse: any ): string | null {
-  if (!jsonResponse || !jsonResponse.$values) {
-    return null; // Handle cases where data is invalid
+    if (!response.ok) {
+      console.error(
+        `Error fetching profile for user ${userId}: ${response.status}`
+      );
+      return false; // Error fetching profile, consider it not set up
+    }
+  } catch (error) {
+    console.error(`Error fetching profile status for user ${userId}:`, error);
+    return false; // Error during fetch, consider profile not set up
   }
+}
 
-  const account = jsonResponse.$values.find((item: any) => item.id === accountId);
+export async function fetchUserInternProfileStatus(userId: string) {
+  try {
+    const response = await fetch(`http://localhost:5152/api/Intern/${userId}`);
 
-  if (account && account.accountType && account.accountType.typeName) {
-    return account.accountType.typeName;
-  } else {
-    return null; // Account not found or typeName missing
+    if (response.status === 404) {
+      return false; // User not found, profile is not set up
+    }
+
+    if (!response.ok) {
+      console.error(
+        `Error fetching profile for user ${userId}: ${response.status}`
+      );
+      return false; // Error fetching profile, consider it not set up
+    }
+  } catch (error) {
+    console.error(`Error fetching profile status for user ${userId}:`, error);
+    return false; // Error during fetch, consider profile not set up
   }
 }
