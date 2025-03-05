@@ -1,3 +1,5 @@
+"use client";
+
 import { signUp } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,46 +13,61 @@ export function SignupForm() {
 
     return (
         <div>
-            <form action={signupAction} className="flex max-w-[300px] flex-col gap-2">
+            <form action={signupAction} className="flex max-w-[300px] flex-col gap-y-6">
                 <div className="space-y-2">
                     <Label>I am an:</Label>
-                    <RadioGroup defaultValue="intern" name="accountType" className="flex items-center gap-4">
+                    <RadioGroup defaultValue="Intern" name="accountType" className="flex items-center gap-4">
                         <Label
                             htmlFor="option1"
                             className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-zinc-100 dark:[&:has(:checked)]:bg-zinc-800"
                         >
-                            <RadioGroupItem id="intern" value="intern" />
+                            <RadioGroupItem id="intern" value="Intern" />
                             Intern
                         </Label>
                         <Label
                             htmlFor="option2"
                             className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-zinc-100 dark:[&:has(:checked)]:bg-zinc-800"
                         >
-                            <RadioGroupItem id="recruiter" value="recruiter" />
+                            <RadioGroupItem id="recruiter" value="Recruiter" />
                             Recruiter
                         </Label>
                     </RadioGroup>
+                    {state?.errors?.accountType && (
+                        <p className="text-red-500">{state.errors.accountType}</p>
+                    )}
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="firstName">First Name</Label>
                         <Input id="firstName" name="firstName" placeholder="First name" />
+                        {state?.errors?.firstName && (
+                        <p className="text-red-500">{state.errors.firstName}</p>
+                    )}
                     </div>
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="lastName">Last Name</Label>
                         <Input id="lastName" name="lastName" placeholder="Last name" />
+                        {state?.errors?.lastName && (
+                        <p className="text-red-500">{state.errors.lastName}</p>
+                    )}
                     </div>
                 </div>
 
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="email">Email</Label>
                     <Input id="email" type="email" name="email" placeholder="Email" />
+                    {state?.errors?.email && (
+                        <p className="text-red-500">{state.errors.email}</p>
+                    )}
                 </div>
 
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="password">Password</Label>
                     <Input id="password" type="password" name="password" placeholder="Enter Password" />
+                    {state?.errors?.password && (
+                        <p className="text-red-500">{state.errors.password}</p>
+                    )}
                 </div>
 
                 <div className="flex flex-col gap-2">

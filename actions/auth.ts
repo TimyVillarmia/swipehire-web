@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { createSession, deleteSession } from "@/lib/sessions";
 import { loginSchema, registerSchema } from "@/definitions";
-import { getAccountTypeIdByTypeName } from "@/lib/utils";
+import { getAccountTypeIdByTypeName } from "@/lib/data";
 
 export async function login(prevState: any, formData: FormData) {
   const result = loginSchema.safeParse(Object.fromEntries(formData));
@@ -15,6 +15,8 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   const { email, password } = result.data;
+
+  
 
   const response = await fetch("http://localhost:5152/api/Auth/login", {
     method: "POST",
@@ -50,28 +52,26 @@ export async function signUp(prevState: any, formData: FormData) {
 
   const { accountType, firstName, lastName, email, password } = result.data;
 
-  // 1. Get Account Type ID
-  const accountTypeResponse = await fetch(
-    "http://localhost:5152/api/AccountType"
-  );
+  
+  const accountTypeId = await getAccountTypeIdByTypeName(accountType);
 
-  const accountTypeData = await accountTypeResponse.json();
-  const accountTypeId = getAccountTypeIdByTypeName(accountType, accountTypeData);
+  const registerFormData = new FormData();
 
-  const newformData = new FormData();
-  newformData.append("InternPicture", "");
-  newformData.append("Firstname", firstName);
-  newformData.append("Lastname", lastName);
-  newformData.append("Email", email);
-  newformData.append("Password", password);
-  newformData.append("AccountTypeId", accountTypeId);
+  registerFormData.append("InternPicture", "");
+  registerFormData.append("Firstname", firstName);
+  registerFormData.append("Lastname", lastName);
+  registerFormData.append("Email", email);
+  registerFormData.append("Password", password);
+  registerFormData.append("AccountTypeId", accountTypeId);
 
   const response = await fetch("http://localhost:5152/api/Account", {
     method: "POST",
-    body: newformData,
+    body: registerFormData,
   });
 
+
   if (!response.ok) {
+
     return {
       errors: {
         email: ["Unable to create your account"],

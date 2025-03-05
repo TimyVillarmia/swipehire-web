@@ -1,5 +1,6 @@
 import { InternProfileData } from "@/definitions";
 
+
 export async function getAllAccount() {
   const response = await fetch("http://localhost:5152/api/Account");
 
@@ -9,6 +10,8 @@ export async function getAllAccount() {
 
   return response.json();
 }
+
+
 
 export async function postAccount() {}
 
@@ -198,7 +201,7 @@ export async function postInternProfile(internProfile: InternProfileData) {
   return response;
 }
 
-export async function getInternProfileById(accountId: number | null) {
+export async function getInternProfileById(accountIxd: number | null) {
   const response = await fetch(
     `http://localhost:5152/api/Intern/account/${accountId}`
   );

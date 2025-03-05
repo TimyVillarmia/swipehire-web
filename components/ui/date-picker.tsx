@@ -12,17 +12,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { SelectSingleEventHandler } from "react-day-picker"
 
 interface DatePickerDemoProps {
   value: Date | undefined;
-  onChange: (date: Date | undefined) => void;
+  onselect: SelectSingleEventHandler;
   label: string;
   name: string;
 }
 
 export function DatePicker({
   value,
-  onChange,
+  onselect,
   label,
   name,
 }: DatePickerDemoProps) {
@@ -49,7 +50,7 @@ export function DatePicker({
           <Calendar
             mode="single"
             selected={value}
-            onSelect={onChange}
+            onSelect={onselect}
             initialFocus
           />
         </PopoverContent>

@@ -5,19 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getAccountTypeIdByTypeName(
-  typeName: string,
-  jsonResponse: any
-) {
-  const accountType = jsonResponse.$values.find(
-    (item) => item.typeName === typeName
-  );
-  if (accountType) {
-    return accountType.id;
-  } else {
-    return null; // Or handle the case where the typeName is not found
-  }
-}
+
 
 export async function fetchUserRecruitProfileStatus(userId: string) {
   try {

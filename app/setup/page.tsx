@@ -9,17 +9,15 @@ import { getAccountById } from "@/lib/data";
 export default async function Profile() {
 
     const currentUserId = await getUserIdFromCookie();
-    const { accountType, firstname, lastname, email } = await getAccountById(currentUserId);
+    const { accountType, firstname, lastname, email, internPictureUrl } = await getAccountById(currentUserId);
     const typeName = accountType.typeName;
-
-
 
     return (
         <div>
             <div className="grid place-items-center my-12">
                 <div className="flex items-center space-x-4">
                     <Avatar className="h-16 w-16">
-                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                        <AvatarImage src={internPictureUrl} alt="@shadcn" />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div>
@@ -28,9 +26,8 @@ export default async function Profile() {
                     </div>
                 </div>
                 {
-                    typeName === "intern" ? <InternForm firstName={firstname} lastName={lastname} /> : <RecruiterForm firstName={firstname} lastName={lastname} />
+                    typeName === "Intern" ? <InternForm firstName={firstname} lastName={lastname} /> : <RecruiterForm firstName={firstname} lastName={lastname} />
                 }
-
             </div>
         </div>
 

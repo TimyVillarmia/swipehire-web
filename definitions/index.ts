@@ -15,7 +15,7 @@ export const registerSchema = z.object({
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
-  accountType: z.enum(["intern", "recruiter"]),
+  accountType: z.enum(["Intern", "Recruiter"]),
 });
 
 export const recruiterProfileSchema = z.object({

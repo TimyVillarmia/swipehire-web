@@ -8,7 +8,6 @@ import { DatePicker } from "@/components/ui/date-picker"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { format } from "date-fns"
 
 import { useActionState, useState } from "react"
 import { useFormStatus } from "react-dom"
@@ -22,49 +21,16 @@ interface InternFormProps {
 
 export function InternForm({ firstName, lastName }: InternFormProps) {
     const [state, updateProfile] = useActionState(InterProfileAction, undefined);
-    const [startDate, setStartDate] = useState<Date | undefined>();
-    const [endDate, setEndDate] = useState<Date | undefined>();
+
+
+    const [startEducationDate, setStartEducationDate] = useState<Date | undefined>();
+    const [endEducationDate, setEducationEndDate] = useState<Date | undefined>();
 
     const [startWorkDate, setStartWorkDate] = useState<Date | undefined>();
-    const [endWorkDate, setWorkEndDate] = useState<Date | undefined>();
-
-    // const [field, setField] = useState("");
-    // const [fields, setFields] = useState<Framework[]>([]);
-
-    // useEffect(() => {
-    //     async function fetchData() {
-    //         const response = await fetch("http://localhost:5152/api/Field");
-    //         const data = await response.json();
-    //         setFields(data.$values);
-    //     }
-
-    //     fetchData();
-    // }, []);
-
-    // console.log(fields)
-
-    const handleStartDateChange = (date: Date | undefined) => {
-        setStartDate(date);
-    };
-
-    const handleEndDateChange = (date: Date | undefined) => {
-        setEndDate(date);
-    };
-
-    const handleStartWorkDateChange = (date: Date | undefined) => {
-        setStartWorkDate(date);
-    };
-
-    const handleEndWorkDateChange = (date: Date | undefined) => {
-        setWorkEndDate(date);
-    };
+    const [endWorkDate, setEndWorkDate] = useState<Date | undefined>();
 
 
-    const handleSubmit = async (formData: FormData) => {
-        formData.set("education_startDate", startDate ? format(startDate, "yyyy-MM-dd") : "");
-        formData.set("education_endDate", endDate ? format(endDate, "yyyy-MM-dd") : "");
-        await updateProfile(formData);
-    };
+
     return (
         <div>
             <h2 className="text-lg font-semibold mt-6 mb-4">Basic Information</h2>
@@ -161,8 +127,8 @@ export function InternForm({ firstName, lastName }: InternFormProps) {
                     <DatePicker
                         label="Start Date"
                         name="education_startDate"
-                        value={startDate}
-                        onChange={handleStartDateChange}
+                        value={startEducationDate}
+                        onselect={setStartEducationDate}
                     />
                     {state?.errors?.education_startDate && (
                         <p className="text-red-500">{state.errors.education_startDate}</p>
@@ -173,8 +139,8 @@ export function InternForm({ firstName, lastName }: InternFormProps) {
                     <DatePicker
                         label="End Date"
                         name="education_endDate"
-                        value={endDate}
-                        onChange={handleEndDateChange}
+                        value={endEducationDate}
+                        onselect={setEducationEndDate}
                     />
                     {state?.errors?.education_endDate && (
                         <p className="text-red-500">{state.errors.education_endDate}</p>
@@ -211,7 +177,7 @@ export function InternForm({ firstName, lastName }: InternFormProps) {
                         label="Start Date"
                         name="work_startDate"
                         value={startWorkDate}
-                        onChange={handleStartWorkDateChange}
+                        onselect={setStartWorkDate}
                     />
                     {state?.errors?.work_startDate && (
                         <p className="text-red-500">{state.errors.work_startDate}</p>
@@ -223,7 +189,7 @@ export function InternForm({ firstName, lastName }: InternFormProps) {
                         label="End Date"
                         name="work_endDate"
                         value={endWorkDate}
-                        onChange={handleEndWorkDateChange}
+                        onselect={setEndWorkDate}
                     />
                     {state?.errors?.work_endDate && (
                         <p className="text-red-500">{state.errors.work_endDate}</p>
@@ -245,7 +211,7 @@ function SubmitButton() {
     const { pending } = useFormStatus();
 
     return (
-        <Button className="w-full bg-[#6C5CE7] hover:bg-[#5A4BD1] uppercase">Complete</Button>
+        <Button className="w-full bg-[#6C5CE7] hover:bg-[#5A4BD1] uppercase" disabled={pending}>Complete</Button>
     );
 }
 
